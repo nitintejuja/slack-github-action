@@ -38,7 +38,6 @@ module.exports = async function slackSend(core) {
       try {
         payload = await fs.readFile(path.resolve(payloadFilePath), 'utf-8');
         // parse github context variables
-
         const token = core.getInput('github-token', { required: true });
         const options = {};
         const event = getOctokit(token, options);
