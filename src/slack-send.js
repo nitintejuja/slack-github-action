@@ -1,4 +1,5 @@
 const github = require('@actions/github');
+const { getOctokit } = require('@actions/github');
 const { WebClient } = require('@slack/web-api');
 const flatten = require('flat');
 const axios = require('axios');
@@ -37,7 +38,13 @@ module.exports = async function slackSend(core) {
       try {
         payload = await fs.readFile(path.resolve(payloadFilePath), 'utf-8');
         // parse github context variables
-        const context = { github: github.context };
+
+        const token = core.getInput('github-token', { required: true });
+        const options = {};
+        const event = getOctokit(token, options);
+        console.log(event);
+        const context = { github: github.context, event };
+        console.log(context);
         const payloadString = payload.replace('$', '');
         payload = markup.up(payloadString, context);
       } catch (error) {
